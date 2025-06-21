@@ -242,6 +242,9 @@ RUN set -ex \
     && SELENIUM_DOWNLOAD_URL=$(curl -sL https://api.github.com/repos/SeleniumHQ/selenium/releases/latest | jq -r ' .assets[] | select(.browser_download_url | contains("selenium-server") and endswith(".jar")) | .browser_download_url') \
     && wget -q -P /usr/share/java $SELENIUM_DOWNLOAD_URL
 
+# Railpack
+RUN curl -sSL https://railpack.com/install.sh | sh
+
 #=======================End of stage: tools  =================
 
 FROM tools AS runtimes
