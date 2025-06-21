@@ -103,21 +103,21 @@ RUN set -ex \
 # kubectl: https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 # eksctl: https://eksctl.io/installation/
 # ecs-cli: https://github.com/aws/amazon-ecs-cli?tab=readme-ov-file#installing
-RUN set -ex \
-    && KUBERNETES_VERSION=1.32.0 \
-    && AMAZON_EKS_S3_PATH=2024-12-20 \
-    && curl -sS -o /usr/local/bin/aws-iam-authenticator https://s3.us-west-2.amazonaws.com/amazon-eks/$KUBERNETES_VERSION/$AMAZON_EKS_S3_PATH/bin/linux/amd64/aws-iam-authenticator \
-    && chmod +x /usr/local/bin/aws-iam-authenticator \
-    && aws-iam-authenticator version \
-    && curl -sS -o /usr/local/bin/kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/$KUBERNETES_VERSION/$AMAZON_EKS_S3_PATH/bin/linux/amd64/kubectl \
-    && chmod +x /usr/local/bin/kubectl \
-    && kubectl version --client \
-    && curl -sS -L https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz | tar xz -C /usr/local/bin \
-    && chmod +x /usr/local/bin/eksctl \
-    && eksctl version \
-    && curl -sS -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
-    && chmod +x /usr/local/bin/ecs-cli \
-    && ecs-cli --version
+# RUN set -ex \
+#     && KUBERNETES_VERSION=1.32.0 \
+#     && AMAZON_EKS_S3_PATH=2024-12-20 \
+#     && curl -sS -o /usr/local/bin/aws-iam-authenticator https://s3.us-west-2.amazonaws.com/amazon-eks/$KUBERNETES_VERSION/$AMAZON_EKS_S3_PATH/bin/linux/amd64/aws-iam-authenticator \
+#     && chmod +x /usr/local/bin/aws-iam-authenticator \
+#     && aws-iam-authenticator version \
+#     && curl -sS -o /usr/local/bin/kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/$KUBERNETES_VERSION/$AMAZON_EKS_S3_PATH/bin/linux/amd64/kubectl \
+#     && chmod +x /usr/local/bin/kubectl \
+#     && kubectl version --client \
+#     && curl -sS -L https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz | tar xz -C /usr/local/bin \
+#     && chmod +x /usr/local/bin/eksctl \
+#     && eksctl version \
+#     && curl -sS -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
+#     && chmod +x /usr/local/bin/ecs-cli \
+#     && ecs-cli --version
 
 # Install amazon-ecr-credential-helper
 # To configure: https://github.com/awslabs/amazon-ecr-credential-helper?tab=readme-ov-file#configuration
@@ -181,45 +181,45 @@ RUN set -ex \
     && rm -rf /tmp/* /var/tmp/*
 
 # Install Finch
-RUN yum install -y runfinch-finch \
-    && finch --version
+# RUN yum install -y runfinch-finch \
+#     && finch --version
 
 # Install gh
 # See instruction: https://github.com/cli/cli/blob/trunk/docs/install_linux.md#fedora-centos-red-hat-enterprise-linux-dnf
-RUN yum -y install 'dnf-command(config-manager)' \
-    && yum config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo \
-    && yum -y install gh --repo gh-cli
+# RUN yum -y install 'dnf-command(config-manager)' \
+#     && yum config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo \
+#     && yum -y install gh --repo gh-cli
 
 # Install Chrome
-RUN set -ex \
-    && curl -L https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm --output /tmp/google-chrome-stable_current_x86_64.rpm \
-    && yum install -y -q /tmp/google-chrome-stable_current_x86_64.rpm \
-    && rm -rf /tmp/* \
-    && google-chrome --version
+# RUN set -ex \
+#     && curl -L https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm --output /tmp/google-chrome-stable_current_x86_64.rpm \
+#     && yum install -y -q /tmp/google-chrome-stable_current_x86_64.rpm \
+#     && rm -rf /tmp/* \
+#     && google-chrome --version
 
 # Install ChromeDriver
 # https://googlechromelabs.github.io/chrome-for-testing/
 # https://github.com/GoogleChromeLabs/chrome-for-testing#json-api-endpoints
-RUN set -ex \
-    && CHROME_DRIVER_DOWNLOAD_URL=$(curl -sL https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r '.channels.Stable.downloads.chromedriver[] | select(.platform == "linux64") | .url') \
-    && curl -L $CHROME_DRIVER_DOWNLOAD_URL --output /tmp/chromedriver-linux64.zip \
-    && unzip -q /tmp/chromedriver-linux64.zip -d /opt/chromedriver \
-    && ln -s /opt/chromedriver/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
-    && rm -rf /tmp/* \
-    && chromedriver --version
+# RUN set -ex \
+#     && CHROME_DRIVER_DOWNLOAD_URL=$(curl -sL https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r '.channels.Stable.downloads.chromedriver[] | select(.platform == "linux64") | .url') \
+#     && curl -L $CHROME_DRIVER_DOWNLOAD_URL --output /tmp/chromedriver-linux64.zip \
+#     && unzip -q /tmp/chromedriver-linux64.zip -d /opt/chromedriver \
+#     && ln -s /opt/chromedriver/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
+#     && rm -rf /tmp/* \
+#     && chromedriver --version
 
 # Install Chromium
 # See instruction: https://www.chromium.org/getting-involved/download-chromium/
-RUN set -ex \
-    && CHROMIUM_VERSION=$(curl -sL https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2FLAST_CHANGE?alt=media) \
-    && CHROMIUM_DOWNLOAD_URL=https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F$CHROMIUM_VERSION%2Fchrome-linux.zip?alt=media \
-    && curl -L $CHROMIUM_DOWNLOAD_URL --output /tmp/chromium-linux.zip \
-    && unzip -q /tmp/chromium-linux.zip -d /opt/chromium \
-    && ln -s /opt/chromium/chrome-linux/chrome /usr/local/bin/chromium \
-    && ln -s /opt/chromium/chrome-linux/chrome /usr/local/bin/chromium-browser \
-    && rm -rf /tmp/* \
-    && chromium --version \
-    && chromium-browser --version
+# RUN set -ex \
+#     && CHROMIUM_VERSION=$(curl -sL https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2FLAST_CHANGE?alt=media) \
+#     && CHROMIUM_DOWNLOAD_URL=https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F$CHROMIUM_VERSION%2Fchrome-linux.zip?alt=media \
+#     && curl -L $CHROMIUM_DOWNLOAD_URL --output /tmp/chromium-linux.zip \
+#     && unzip -q /tmp/chromium-linux.zip -d /opt/chromium \
+#     && ln -s /opt/chromium/chrome-linux/chrome /usr/local/bin/chromium \
+#     && ln -s /opt/chromium/chrome-linux/chrome /usr/local/bin/chromium-browser \
+#     && rm -rf /tmp/* \
+#     && chromium --version \
+#     && chromium-browser --version
 
 # Install Mozilla Firefox
 # RUN set -ex \
@@ -230,17 +230,17 @@ RUN set -ex \
 #     && firefox --version
 
 # Install Geckodriver
-RUN set -ex \
-    && GECKODRIVER_DOWNLOAD_URL=$(curl -sL https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r ' .assets[] | select(.browser_download_url | endswith("linux64.tar.gz")) | .browser_download_url') \
-    && curl -L $GECKODRIVER_DOWNLOAD_URL --output /tmp/geckodriver-latest-linux64.tar.gz \
-    && tar xzf /tmp/geckodriver-latest-linux64.tar.gz -C /usr/local/bin \
-    && rm -rf /tmp/* \
-    && geckodriver --version
+# RUN set -ex \
+#     && GECKODRIVER_DOWNLOAD_URL=$(curl -sL https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r ' .assets[] | select(.browser_download_url | endswith("linux64.tar.gz")) | .browser_download_url') \
+#     && curl -L $GECKODRIVER_DOWNLOAD_URL --output /tmp/geckodriver-latest-linux64.tar.gz \
+#     && tar xzf /tmp/geckodriver-latest-linux64.tar.gz -C /usr/local/bin \
+#     && rm -rf /tmp/* \
+#     && geckodriver --version
 
 # Install Selenium server
-RUN set -ex \
-    && SELENIUM_DOWNLOAD_URL=$(curl -sL https://api.github.com/repos/SeleniumHQ/selenium/releases/latest | jq -r ' .assets[] | select(.browser_download_url | contains("selenium-server") and endswith(".jar")) | .browser_download_url') \
-    && wget -q -P /usr/share/java $SELENIUM_DOWNLOAD_URL
+# RUN set -ex \
+#     && SELENIUM_DOWNLOAD_URL=$(curl -sL https://api.github.com/repos/SeleniumHQ/selenium/releases/latest | jq -r ' .assets[] | select(.browser_download_url | contains("selenium-server") and endswith(".jar")) | .browser_download_url') \
+#     && wget -q -P /usr/share/java $SELENIUM_DOWNLOAD_URL
 
 # Railpack
 RUN curl -sSL https://railpack.com/install.sh | sh
@@ -249,93 +249,93 @@ RUN curl -sSL https://railpack.com/install.sh | sh
 
 FROM tools AS runtimes
 
-#****************      JAVA     ****************************************************
+# #****************      JAVA     ****************************************************
 
-ENV JAVA_21_HOME="/usr/lib/jvm/java-21-amazon-corretto.x86_64" \
-    JDK_21_HOME="/usr/lib/jvm/java-21-amazon-corretto.x86_64" \
-    JRE_21_HOME="/usr/lib/jvm/java-21-amazon-corretto.x86_64" \
-    JAVA_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
-    JDK_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
-    JRE_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
-    JAVA_11_HOME="/usr/lib/jvm/java-11-amazon-corretto.x86_64" \
-    JDK_11_HOME="/usr/lib/jvm/java-11-amazon-corretto.x86_64" \
-    JRE_11_HOME="/usr/lib/jvm/java-11-amazon-corretto.x86_64" \
-    JAVA_8_HOME="/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64" \
-    JDK_8_HOME="/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64" \
-    JRE_8_HOME="/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64" \
-    ANT_VERSION=1.10.15 \
-    MAVEN_HOME="/opt/maven" \
-    MAVEN_VERSION=3.9.9 \
-    GRADLE_VERSION=8.11.1 \
-    SBT_VERSION=1.10.6 \
-    GRADLE_PATH="$SRC_DIR/gradle" \
-    ANT_DOWNLOAD_SHA512="d78427aff207592c024ff1552dc04f7b57065a195c42d398fcffe7a0145e8d00cd46786f5aa52e77ab0fdf81334f065eb8011eecd2b48f7228e97ff4cb20d16c" \
-    MAVEN_DOWNLOAD_SHA512="a555254d6b53d267965a3404ecb14e53c3827c09c3b94b5678835887ab404556bfaf78dcfe03ba76fa2508649dca8531c74bca4d5846513522404d48e8c4ac8b" \
-    GRADLE_DOWNLOADS_SHA256="89d4e70e4e84e2d2dfbb63e4daa53e21b25017cc70c37e4eea31ee51fb15098a 8.11.1" \
-    SBT_DOWNLOAD_SHA256="7e1b098effec80614e838aa61b753a8b46237b24b706ec9b37609030800c111a"
+# ENV JAVA_21_HOME="/usr/lib/jvm/java-21-amazon-corretto.x86_64" \
+#     JDK_21_HOME="/usr/lib/jvm/java-21-amazon-corretto.x86_64" \
+#     JRE_21_HOME="/usr/lib/jvm/java-21-amazon-corretto.x86_64" \
+#     JAVA_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
+#     JDK_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
+#     JRE_17_HOME="/usr/lib/jvm/java-17-amazon-corretto.x86_64" \
+#     JAVA_11_HOME="/usr/lib/jvm/java-11-amazon-corretto.x86_64" \
+#     JDK_11_HOME="/usr/lib/jvm/java-11-amazon-corretto.x86_64" \
+#     JRE_11_HOME="/usr/lib/jvm/java-11-amazon-corretto.x86_64" \
+#     JAVA_8_HOME="/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64" \
+#     JDK_8_HOME="/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64" \
+#     JRE_8_HOME="/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64" \
+#     ANT_VERSION=1.10.15 \
+#     MAVEN_HOME="/opt/maven" \
+#     MAVEN_VERSION=3.9.9 \
+#     GRADLE_VERSION=8.11.1 \
+#     SBT_VERSION=1.10.6 \
+#     GRADLE_PATH="$SRC_DIR/gradle" \
+#     ANT_DOWNLOAD_SHA512="d78427aff207592c024ff1552dc04f7b57065a195c42d398fcffe7a0145e8d00cd46786f5aa52e77ab0fdf81334f065eb8011eecd2b48f7228e97ff4cb20d16c" \
+#     MAVEN_DOWNLOAD_SHA512="a555254d6b53d267965a3404ecb14e53c3827c09c3b94b5678835887ab404556bfaf78dcfe03ba76fa2508649dca8531c74bca4d5846513522404d48e8c4ac8b" \
+#     GRADLE_DOWNLOADS_SHA256="89d4e70e4e84e2d2dfbb63e4daa53e21b25017cc70c37e4eea31ee51fb15098a 8.11.1" \
+#     SBT_DOWNLOAD_SHA256="7e1b098effec80614e838aa61b753a8b46237b24b706ec9b37609030800c111a"
 
-ARG MAVEN_CONFIG_HOME="/root/.m2"
-ENV JAVA_HOME="$JAVA_17_HOME" \
-    JDK_HOME="$JDK_17_HOME" \
-    JRE_HOME="$JRE_17_HOME"
+# ARG MAVEN_CONFIG_HOME="/root/.m2"
+# ENV JAVA_HOME="$JAVA_17_HOME" \
+#     JDK_HOME="$JDK_17_HOME" \
+#     JRE_HOME="$JRE_17_HOME"
 
-RUN set -ex \
-    && rpm --import https://yum.corretto.aws/corretto.key \
-    && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
-    && yum install -y -q java-21-amazon-corretto java-21-amazon-corretto-devel \
-    && yum install -y -q java-17-amazon-corretto java-17-amazon-corretto-devel \
-    && yum install -y -q java-11-amazon-corretto java-11-amazon-corretto-devel \
-    && yum install -y -q java-1.8.0-amazon-corretto java-1.8.0-amazon-corretto-devel \
-    && update-ca-trust \
-    && for tool_path in $JAVA_HOME/bin/*; do \
-          tool=`basename $tool_path`; \
-          update-alternatives --install /usr/bin/$tool $tool $tool_path 10000; \
-          update-alternatives --set $tool $tool_path; \
-        done \
-    && rm $JAVA_HOME/lib/security/cacerts && ln -s /etc/pki/java/cacerts $JAVA_HOME/lib/security/cacerts \
-    # Install Ant
-    && curl -LSso /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz https://archive.apache.org/dist/ant/binaries/apache-ant-$ANT_VERSION-bin.tar.gz  \
-    && echo "$ANT_DOWNLOAD_SHA512 /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz" | sha512sum -c - \
-    && tar -xzf /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz -C /opt \
-    && rm /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz \
-    && update-alternatives --install /usr/bin/ant ant /opt/apache-ant-$ANT_VERSION/bin/ant 10000
+# RUN set -ex \
+#     && rpm --import https://yum.corretto.aws/corretto.key \
+#     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
+#     && yum install -y -q java-21-amazon-corretto java-21-amazon-corretto-devel \
+#     && yum install -y -q java-17-amazon-corretto java-17-amazon-corretto-devel \
+#     && yum install -y -q java-11-amazon-corretto java-11-amazon-corretto-devel \
+#     && yum install -y -q java-1.8.0-amazon-corretto java-1.8.0-amazon-corretto-devel \
+#     && update-ca-trust \
+#     && for tool_path in $JAVA_HOME/bin/*; do \
+#           tool=`basename $tool_path`; \
+#           update-alternatives --install /usr/bin/$tool $tool $tool_path 10000; \
+#           update-alternatives --set $tool $tool_path; \
+#         done \
+#     && rm $JAVA_HOME/lib/security/cacerts && ln -s /etc/pki/java/cacerts $JAVA_HOME/lib/security/cacerts \
+#     # Install Ant
+#     && curl -LSso /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz https://archive.apache.org/dist/ant/binaries/apache-ant-$ANT_VERSION-bin.tar.gz  \
+#     && echo "$ANT_DOWNLOAD_SHA512 /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz" | sha512sum -c - \
+#     && tar -xzf /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz -C /opt \
+#     && rm /var/tmp/apache-ant-$ANT_VERSION-bin.tar.gz \
+#     && update-alternatives --install /usr/bin/ant ant /opt/apache-ant-$ANT_VERSION/bin/ant 10000
 
-RUN set -ex \
-    # Install Maven
-    && mkdir -p $MAVEN_HOME \
-    && curl -LSso /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
-    && echo "$MAVEN_DOWNLOAD_SHA512 /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz" | sha512sum -c - \
-    && tar xzf /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz -C $MAVEN_HOME --strip-components=1 \
-    && rm /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz \
-    && update-alternatives --install /usr/bin/mvn mvn /opt/maven/bin/mvn 10000 \
-    && mkdir -p $MAVEN_CONFIG_HOME \
-    # Install Gradle
-    && mkdir -p $GRADLE_PATH \
-    && wget -q "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-all.zip" -O "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" \
-    && unzip -q "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" -d /usr/local \
-    && echo -e "$GRADLE_DOWNLOADS_SHA256" | grep "$GRADLE_VERSION" | sed "s|$GRADLE_VERSION|$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip|" | sha256sum -c - \
-    && rm "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" \
-    && mkdir -p "/tmp/gradle-$GRADLE_VERSION" \
-    && "/usr/local/gradle-$GRADLE_VERSION/bin/gradle" -p "/tmp/gradle-$GRADLE_VERSION" init --overwrite \
-    && "/usr/local/gradle-$GRADLE_VERSION/bin/gradle" -p "/tmp/gradle-$GRADLE_VERSION" wrapper \
-    # Android Studio uses the "-all" distribution for it's wrapper script.
-    && perl -pi -e "s/gradle-$GRADLE_VERSION-bin.zip/gradle-$GRADLE_VERSION-all.zip/" "/tmp/gradle-$GRADLE_VERSION/gradle/wrapper/gradle-wrapper.properties" \
-    && "/tmp/gradle-$GRADLE_VERSION/gradlew" -p "/tmp/gradle-$GRADLE_VERSION" init --overwrite \
-    && rm -rf "/tmp/gradle-$GRADLE_VERSION" \
-    # Install default GRADLE_VERSION to path
-    && ln -s /usr/local/gradle-$GRADLE_VERSION/bin/gradle /usr/bin/gradle \
-    && rm -rf $GRADLE_PATH \
-    # Install SBT
-    && curl -fSL "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz" -o sbt.tgz \
-    && echo "${SBT_DOWNLOAD_SHA256} *sbt.tgz" | sha256sum -c - \
-    && tar xzf sbt.tgz -C /usr/local/bin/ \
-    && rm sbt.tgz
+# RUN set -ex \
+#     # Install Maven
+#     && mkdir -p $MAVEN_HOME \
+#     && curl -LSso /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
+#     && echo "$MAVEN_DOWNLOAD_SHA512 /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz" | sha512sum -c - \
+#     && tar xzf /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz -C $MAVEN_HOME --strip-components=1 \
+#     && rm /var/tmp/apache-maven-$MAVEN_VERSION-bin.tar.gz \
+#     && update-alternatives --install /usr/bin/mvn mvn /opt/maven/bin/mvn 10000 \
+#     && mkdir -p $MAVEN_CONFIG_HOME \
+#     # Install Gradle
+#     && mkdir -p $GRADLE_PATH \
+#     && wget -q "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-all.zip" -O "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" \
+#     && unzip -q "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" -d /usr/local \
+#     && echo -e "$GRADLE_DOWNLOADS_SHA256" | grep "$GRADLE_VERSION" | sed "s|$GRADLE_VERSION|$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip|" | sha256sum -c - \
+#     && rm "$GRADLE_PATH/gradle-$GRADLE_VERSION-all.zip" \
+#     && mkdir -p "/tmp/gradle-$GRADLE_VERSION" \
+#     && "/usr/local/gradle-$GRADLE_VERSION/bin/gradle" -p "/tmp/gradle-$GRADLE_VERSION" init --overwrite \
+#     && "/usr/local/gradle-$GRADLE_VERSION/bin/gradle" -p "/tmp/gradle-$GRADLE_VERSION" wrapper \
+#     # Android Studio uses the "-all" distribution for it's wrapper script.
+#     && perl -pi -e "s/gradle-$GRADLE_VERSION-bin.zip/gradle-$GRADLE_VERSION-all.zip/" "/tmp/gradle-$GRADLE_VERSION/gradle/wrapper/gradle-wrapper.properties" \
+#     && "/tmp/gradle-$GRADLE_VERSION/gradlew" -p "/tmp/gradle-$GRADLE_VERSION" init --overwrite \
+#     && rm -rf "/tmp/gradle-$GRADLE_VERSION" \
+#     # Install default GRADLE_VERSION to path
+#     && ln -s /usr/local/gradle-$GRADLE_VERSION/bin/gradle /usr/bin/gradle \
+#     && rm -rf $GRADLE_PATH \
+#     # Install SBT
+#     && curl -fSL "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz" -o sbt.tgz \
+#     && echo "${SBT_DOWNLOAD_SHA256} *sbt.tgz" | sha256sum -c - \
+#     && tar xzf sbt.tgz -C /usr/local/bin/ \
+#     && rm sbt.tgz
 
-ENV PATH="/usr/local/bin/sbt/bin:$PATH"
-RUN sbt version -Dsbt.rootdir=true \
-    # Clean up
-    && rm -rf /tmp/* /var/tmp/*
-#****************     END JAVA     ****************************************************
+# ENV PATH="/usr/local/bin/sbt/bin:$PATH"
+# RUN sbt version -Dsbt.rootdir=true \
+#     # Clean up
+#     && rm -rf /tmp/* /var/tmp/*
+# #****************     END JAVA     ****************************************************
 
 #****************      NODEJS     *****************************************************
 
@@ -370,32 +370,32 @@ ENV N_PRESERVE_NPM=1 \
     N_PRESERVE_COREPACK=1
 #****************      END NODEJS     **************************************************
 
-#**************** RUBY *****************************************************************
+# #**************** RUBY *****************************************************************
 
-#rubyenv
-ENV RBENV_SRC_DIR="/usr/local/rbenv"
+# #rubyenv
+# ENV RBENV_SRC_DIR="/usr/local/rbenv"
 
-ENV PATH="/root/.rbenv/shims:$RBENV_SRC_DIR/bin:$RBENV_SRC_DIR/shims:$PATH" \
-    RUBY_BUILD_SRC_DIR="$RBENV_SRC_DIR/plugins/ruby-build"
+# ENV PATH="/root/.rbenv/shims:$RBENV_SRC_DIR/bin:$RBENV_SRC_DIR/shims:$PATH" \
+#     RUBY_BUILD_SRC_DIR="$RBENV_SRC_DIR/plugins/ruby-build"
 
-RUN set -ex \
-    && git clone https://github.com/rbenv/rbenv.git $RBENV_SRC_DIR \
-    && mkdir -p $RBENV_SRC_DIR/plugins \
-    && git clone https://github.com/rbenv/ruby-build.git $RUBY_BUILD_SRC_DIR \
-    && sh $RUBY_BUILD_SRC_DIR/install.sh
+# RUN set -ex \
+#     && git clone https://github.com/rbenv/rbenv.git $RBENV_SRC_DIR \
+#     && mkdir -p $RBENV_SRC_DIR/plugins \
+#     && git clone https://github.com/rbenv/ruby-build.git $RUBY_BUILD_SRC_DIR \
+#     && sh $RUBY_BUILD_SRC_DIR/install.sh
 
-ENV RUBY_34_VERSION="3.4.1" \
-    RUBY_33_VERSION="3.3.6" \
-    RUBY_32_VERSION="3.2.6" \
-    RUBY_31_VERSION="3.1.6"
+# ENV RUBY_34_VERSION="3.4.1" \
+#     RUBY_33_VERSION="3.3.6" \
+#     RUBY_32_VERSION="3.2.6" \
+#     RUBY_31_VERSION="3.1.6"
 
-RUN rbenv install $RUBY_34_VERSION \
-    && rbenv install $RUBY_33_VERSION \
-    && rbenv install $RUBY_32_VERSION \
-    && rbenv install $RUBY_31_VERSION \
-    && rbenv global $RUBY_32_VERSION && ruby -v \
-    && rm -rf /tmp/*
-#**************** END RUBY *************************************************************
+# RUN rbenv install $RUBY_34_VERSION \
+#     && rbenv install $RUBY_33_VERSION \
+#     && rbenv install $RUBY_32_VERSION \
+#     && rbenv install $RUBY_31_VERSION \
+#     && rbenv global $RUBY_32_VERSION && ruby -v \
+#     && rm -rf /tmp/*
+# #**************** END RUBY *************************************************************
 
 #**************** PYTHON ***************************************************************
 
@@ -404,10 +404,10 @@ RUN curl -s -S -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master
 ENV PATH="/root/.pyenv/shims:/root/.pyenv/bin:$PATH"
 
 ENV PYTHON_313_VERSION="3.13.1" \
-    PYTHON_312_VERSION="3.12.8" \
+    # PYTHON_312_VERSION="3.12.8" \
     PYTHON_311_VERSION="3.11.11" \
-    PYTHON_310_VERSION="3.10.16" \
-    PYTHON_39_VERSION="3.9.21" \
+    # PYTHON_310_VERSION="3.10.16" \
+    # PYTHON_39_VERSION="3.9.21" \
     PYTHON_PIP_VERSION="24.3.1" \
     PYYAML_VERSION="6.0.2" \
     PYTHON_SETUPTOOLS_VERSION="75.6.0" \
@@ -423,15 +423,15 @@ RUN set -ex \
     && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
     && pip3 uninstall cython --yes
 
-# Python312
-RUN set -ex \
-    && pyenv install $PYTHON_312_VERSION \
-    && pyenv global $PYTHON_312_VERSION \
-    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
-    && pip3 install wheel \
-    && pip3 install --no-cache-dir --upgrade "setuptools==$PYTHON_SETUPTOOLS_VERSION" boto3 pipenv virtualenv \
-    && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
-    && pip3 uninstall cython --yes
+# # Python312
+# RUN set -ex \
+#     && pyenv install $PYTHON_312_VERSION \
+#     && pyenv global $PYTHON_312_VERSION \
+#     && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+#     && pip3 install wheel \
+#     && pip3 install --no-cache-dir --upgrade "setuptools==$PYTHON_SETUPTOOLS_VERSION" boto3 pipenv virtualenv \
+#     && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
+#     && pip3 uninstall cython --yes
 
 # Python311
 RUN set -ex \
@@ -443,51 +443,51 @@ RUN set -ex \
     && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
     && pip3 uninstall cython --yes
 
-# Python310
-RUN set -ex \
-    && pyenv install $PYTHON_310_VERSION \
-    && pyenv global $PYTHON_310_VERSION \
-    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
-    && pip3 install wheel \
-    && pip3 install --no-cache-dir --upgrade "setuptools==$PYTHON_SETUPTOOLS_VERSION" boto3 pipenv virtualenv \
-    && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
-    && pip3 uninstall cython --yes
+# # Python310
+# RUN set -ex \
+#     && pyenv install $PYTHON_310_VERSION \
+#     && pyenv global $PYTHON_310_VERSION \
+#     && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+#     && pip3 install wheel \
+#     && pip3 install --no-cache-dir --upgrade "setuptools==$PYTHON_SETUPTOOLS_VERSION" boto3 pipenv virtualenv \
+#     && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
+#     && pip3 uninstall cython --yes
 
-# Python39
-RUN set -ex \
-    && pyenv install $PYTHON_39_VERSION \
-    && pyenv global $PYTHON_39_VERSION \
-    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
-    && pip3 install wheel \
-    && pip3 install --no-cache-dir --upgrade "setuptools==$PYTHON_SETUPTOOLS_VERSION" boto3 pipenv virtualenv \
-    && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
-    && pip3 uninstall cython --yes \
-    && rm -rf /tmp/*
+# # Python39
+# RUN set -ex \
+#     && pyenv install $PYTHON_39_VERSION \
+#     && pyenv global $PYTHON_39_VERSION \
+#     && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+#     && pip3 install wheel \
+#     && pip3 install --no-cache-dir --upgrade "setuptools==$PYTHON_SETUPTOOLS_VERSION" boto3 pipenv virtualenv \
+#     && pip3 install --no-build-isolation "Cython<3" "PyYAML==$PYYAML_VERSION" \
+#     && pip3 uninstall cython --yes \
+#     && rm -rf /tmp/*
 #**************** END PYTHON *****************************************************
 
-#****************      PHP     ****************************************************
+# #****************      PHP     ****************************************************
 
-#phpenv
-RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
-ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
+# #phpenv
+# RUN curl -L https://raw.githubusercontent.com/phpenv/phpenv-installer/master/bin/phpenv-installer | bash
+# ENV PATH="/root/.phpenv/shims:/root/.phpenv/bin:$PATH"
 
-ENV PHP_83_VERSION="8.3.13" \
-    PHP_82_VERSION="8.2.25"
-# Set environment variables for PHP configure options
-ENV PHP_BUILD_CONFIGURE_OPTS="--with-curl --with-password-argon2 --with-pdo-pgsql --with-libedit"
-# Set make arguments to use 4 parallel jobs.
-ENV PHP_BUILD_EXTRA_MAKE_ARGUMENTS="-j4"
+# ENV PHP_83_VERSION="8.3.13" \
+#     PHP_82_VERSION="8.2.25"
+# # Set environment variables for PHP configure options
+# ENV PHP_BUILD_CONFIGURE_OPTS="--with-curl --with-password-argon2 --with-pdo-pgsql --with-libedit"
+# # Set make arguments to use 4 parallel jobs.
+# ENV PHP_BUILD_EXTRA_MAKE_ARGUMENTS="-j4"
 
-RUN phpenv update \
-    && phpenv install $PHP_83_VERSION \
-    && phpenv install $PHP_82_VERSION \
-    && phpenv global $PHP_82_VERSION \
-    && php -v \
-    && echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_83_VERSION/etc/conf.d/memory.ini" \
-    && echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_82_VERSION/etc/conf.d/memory.ini" \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer \
-    && rm -rf /tmp/*
-#****************      END PHP     ****************************************************
+# RUN phpenv update \
+#     && phpenv install $PHP_83_VERSION \
+#     && phpenv install $PHP_82_VERSION \
+#     && phpenv global $PHP_82_VERSION \
+#     && php -v \
+#     && echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_83_VERSION/etc/conf.d/memory.ini" \
+#     && echo "memory_limit = 1G;" >> "/root/.phpenv/versions/$PHP_82_VERSION/etc/conf.d/memory.ini" \
+#     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer \
+#     && rm -rf /tmp/*
+# #****************      END PHP     ****************************************************
 
 #****************     GOLANG     ****************************************************
 
@@ -496,15 +496,15 @@ RUN git clone https://github.com/syndbg/goenv.git $HOME/.goenv
 ENV PATH="/root/.goenv/shims:/root/.goenv/bin:/go/bin:$PATH"
 
 ENV GOLANG_23_VERSION="1.23.4" \
-    GOLANG_22_VERSION="1.22.10" \
-    GOLANG_21_VERSION="1.21.13" \
+    # GOLANG_22_VERSION="1.22.10" \
+    # GOLANG_21_VERSION="1.21.13" 
     GOLANG_20_VERSION="1.20.14"
 ENV GOENV_DISABLE_GOPATH=1 \
     GOPATH="/go"
 
 RUN goenv install $GOLANG_23_VERSION \
-    && goenv install $GOLANG_22_VERSION \
-    && goenv install $GOLANG_21_VERSION \
+    # && goenv install $GOLANG_22_VERSION \
+    # && goenv install $GOLANG_21_VERSION \
     && goenv install $GOLANG_20_VERSION \
     && goenv global $GOLANG_20_VERSION \
     && go env -w GO111MODULE=auto \
@@ -512,59 +512,59 @@ RUN goenv install $GOLANG_23_VERSION \
     && rm -rf /tmp/*
 #****************      END GOLANG     ****************************************************
 
-#****************     DotNet     *********************************************************
+# #****************     DotNet     *********************************************************
 
-# Dotnet tool
-ENV PATH="/root/.dotnet/:/root/.dotnet/tools/:$PATH"
-RUN set -ex  \
-    && wget -qO /usr/local/bin/dotnet-install.sh https://dot.net/v1/dotnet-install.sh \
-    && chmod +x /usr/local/bin/dotnet-install.sh
+# # Dotnet tool
+# ENV PATH="/root/.dotnet/:/root/.dotnet/tools/:$PATH"
+# RUN set -ex  \
+#     && wget -qO /usr/local/bin/dotnet-install.sh https://dot.net/v1/dotnet-install.sh \
+#     && chmod +x /usr/local/bin/dotnet-install.sh
 
-ENV DOTNET_8_SDK_VERSION="8.0.404" \
-    DOTNET_6_SDK_VERSION="6.0.428" \
-    DOTNET_8_GLOBAL_JSON_SDK_VERSION="8.0.0" \
-    DOTNET_6_GLOBAL_JSON_SDK_VERSION="6.0.0"
-ENV DOTNET_ROOT="/root/.dotnet"
+# ENV DOTNET_8_SDK_VERSION="8.0.404" \
+#     DOTNET_6_SDK_VERSION="6.0.428" \
+#     DOTNET_8_GLOBAL_JSON_SDK_VERSION="8.0.0" \
+#     DOTNET_6_GLOBAL_JSON_SDK_VERSION="6.0.0"
+# ENV DOTNET_ROOT="/root/.dotnet"
 
-# Add .NET Core 8 Global Tools install folder to PATH
-RUN /usr/local/bin/dotnet-install.sh -v $DOTNET_8_SDK_VERSION \
-    && /usr/local/bin/dotnet-install.sh -v $DOTNET_6_SDK_VERSION \
-    && dotnet --list-sdks \
-    && cd /codebuild && dotnet new globaljson --force --sdk-version $DOTNET_6_GLOBAL_JSON_SDK_VERSION --roll-forward feature
+# # Add .NET Core 8 Global Tools install folder to PATH
+# RUN /usr/local/bin/dotnet-install.sh -v $DOTNET_8_SDK_VERSION \
+#     && /usr/local/bin/dotnet-install.sh -v $DOTNET_6_SDK_VERSION \
+#     && dotnet --list-sdks \
+#     && cd /codebuild && dotnet new globaljson --force --sdk-version $DOTNET_6_GLOBAL_JSON_SDK_VERSION --roll-forward feature
 
-## Trigger the population of the local package cache
-ENV NUGET_XMLDOC_MODE skip
-RUN set -ex \
-    && mkdir warmup \
-    && cd warmup \
-    && dotnet new \
-    && cd .. \
-    && rm -rf warmup \
-    && rm -rf /tmp/NuGetScratch
+# ## Trigger the population of the local package cache
+# ENV NUGET_XMLDOC_MODE skip
+# RUN set -ex \
+#     && mkdir warmup \
+#     && cd warmup \
+#     && dotnet new \
+#     && cd .. \
+#     && rm -rf warmup \
+#     && rm -rf /tmp/NuGetScratch
 
-# Install GitVersion
-ENV GITVERSION_VERSION="6.0.5"
-RUN set -ex \
-    && dotnet tool install --global GitVersion.Tool --version $GITVERSION_VERSION \
-    && ln -s ~/.dotnet/tools/dotnet-gitversion /usr/local/bin/gitversion \
-    && rm -rf /tmp/*
+# # Install GitVersion
+# ENV GITVERSION_VERSION="6.0.5"
+# RUN set -ex \
+#     && dotnet tool install --global GitVersion.Tool --version $GITVERSION_VERSION \
+#     && ln -s ~/.dotnet/tools/dotnet-gitversion /usr/local/bin/gitversion \
+#     && rm -rf /tmp/*
 
-# Install Powershell Core
-# See instructions at https://learn.microsoft.com/en-us/powershell/scripting/install/install-other-linux?view=powershell-7.4#installation-using-a-binary-archive-file
-ARG POWERSHELL_VERSION=7.4.6
-ARG POWERSHELL_DOWNLOAD_URL=https://github.com/PowerShell/PowerShell/releases/download/v$POWERSHELL_VERSION/powershell-$POWERSHELL_VERSION-linux-x64.tar.gz
-ARG POWERSHELL_DOWNLOAD_SHA=6f6015203c47806c5cc444c19d8ed019695e610fbd948154264bf9ca8e157561
+# # Install Powershell Core
+# # See instructions at https://learn.microsoft.com/en-us/powershell/scripting/install/install-other-linux?view=powershell-7.4#installation-using-a-binary-archive-file
+# ARG POWERSHELL_VERSION=7.4.6
+# ARG POWERSHELL_DOWNLOAD_URL=https://github.com/PowerShell/PowerShell/releases/download/v$POWERSHELL_VERSION/powershell-$POWERSHELL_VERSION-linux-x64.tar.gz
+# ARG POWERSHELL_DOWNLOAD_SHA=6f6015203c47806c5cc444c19d8ed019695e610fbd948154264bf9ca8e157561
 
-RUN set -ex \
-    && curl -SL $POWERSHELL_DOWNLOAD_URL --output powershell.tar.gz \
-    && echo "$POWERSHELL_DOWNLOAD_SHA powershell.tar.gz" | sha256sum -c - \
-    && mkdir -p /opt/microsoft/powershell/$POWERSHELL_VERSION \
-    && tar zxf powershell.tar.gz -C /opt/microsoft/powershell/$POWERSHELL_VERSION \
-    && rm powershell.tar.gz \
-    && chmod +x /opt/microsoft/powershell/$POWERSHELL_VERSION/pwsh \
-    && ln -s /opt/microsoft/powershell/$POWERSHELL_VERSION/pwsh /usr/bin/pwsh \
-    && pwsh --version
-#****************      END DotNet     ****************************************************
+# RUN set -ex \
+#     && curl -SL $POWERSHELL_DOWNLOAD_URL --output powershell.tar.gz \
+#     && echo "$POWERSHELL_DOWNLOAD_SHA powershell.tar.gz" | sha256sum -c - \
+#     && mkdir -p /opt/microsoft/powershell/$POWERSHELL_VERSION \
+#     && tar zxf powershell.tar.gz -C /opt/microsoft/powershell/$POWERSHELL_VERSION \
+#     && rm powershell.tar.gz \
+#     && chmod +x /opt/microsoft/powershell/$POWERSHELL_VERSION/pwsh \
+#     && ln -s /opt/microsoft/powershell/$POWERSHELL_VERSION/pwsh /usr/bin/pwsh \
+#     && pwsh --version
+# #****************      END DotNet     ****************************************************
 
 #======================= End of stage: runtimes  =================
 
@@ -573,10 +573,7 @@ FROM runtimes AS al2_v5
 # Activate runtime versions specific to image version.
 RUN n --preserve $NODE_18_VERSION
 RUN pyenv global $PYTHON_311_VERSION
-RUN phpenv global $PHP_82_VERSION
-RUN rbenv global $RUBY_32_VERSION
 RUN goenv global $GOLANG_20_VERSION
-RUN dotnet new globaljson --force --sdk-version $DOTNET_6_GLOBAL_JSON_SDK_VERSION --roll-forward feature
 
 # Configure SSH
 COPY ssh_config /root/.ssh/config
