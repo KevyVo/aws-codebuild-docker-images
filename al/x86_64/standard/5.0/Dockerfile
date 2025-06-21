@@ -136,6 +136,9 @@ RUN set -ex \
     && (curl -sSL "https://github.com/buildpacks/pack/releases/download/v${PACK_VERSION}/pack-v${PACK_VERSION}-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack) \
     && pack --version
 
+# Railpack
+RUN curl -sSL https://railpack.com/install.sh | sh
+
 # Install Docker 27
 ENV DOCKER_BUCKET="download.docker.com" \
     DOCKER_CHANNEL="stable" \
@@ -241,9 +244,6 @@ RUN set -ex \
 # RUN set -ex \
 #     && SELENIUM_DOWNLOAD_URL=$(curl -sL https://api.github.com/repos/SeleniumHQ/selenium/releases/latest | jq -r ' .assets[] | select(.browser_download_url | contains("selenium-server") and endswith(".jar")) | .browser_download_url') \
 #     && wget -q -P /usr/share/java $SELENIUM_DOWNLOAD_URL
-
-# Railpack
-RUN curl -sSL https://railpack.com/install.sh | sh
 
 #=======================End of stage: tools  =================
 
